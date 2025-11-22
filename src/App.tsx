@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
+import { NavLink, Routes, Route } from 'react-router-dom';
 import { baseSpeciesList } from './data/species';
 import type { SpeciesProfile } from './types/species';
 import { useLocalSpecies } from './hooks/useLocalSpecies';
@@ -20,19 +21,21 @@ type TabKey =
   | 'tools'
   | 'about';
 
-const TABS: { key: TabKey; label: string }[] = [
-  { key: 'home', label: 'Hem' },
-  { key: 'species', label: 'Artprofiler' },
-  { key: 'care', label: 'Vård & Miljö' },
-  { key: 'breeding', label: 'Avel' },
-  { key: 'rehab', label: 'Rehab & Rescue' },
-  { key: 'tools', label: 'Formulär & Verktyg' },
-  { key: 'about', label: 'Om projektet' }
+const TABS: {
+  key: TabKey;
+  label: string;
+  path: string;
+}[] = [
+  { key: 'home', label: 'Hem', path: '/' },
+  { key: 'species', label: 'Artprofiler', path: '/species' },
+  { key: 'care', label: 'Vård & Miljö', path: '/care' },
+  { key: 'breeding', label: 'Avel', path: '/breeding' },
+  { key: 'rehab', label: 'Rehab & Rescue', path: '/rehab' },
+  { key: 'tools', label: 'Formulär & Verktyg', path: '/tools' },
+  { key: 'about', label: 'Om projektet', path: '/about' }
 ];
 
 const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<TabKey>('home');
-
   const { localSpecies, addSpecies, clearSpecies } = useLocalSpecies();
 
   const combinedSpecies: SpeciesProfile[] = useMemo(
@@ -54,45 +57,55 @@ const App: React.FC = () => {
         </div>
       </header>
 
-      {/* Tabs */}
+      {/* Tabs / nav */}
       <nav className="border-b border-slate-800 bg-slate-950/95">
         <div className="mx-auto flex max-w-5xl gap-1 overflow-x-auto px-2 py-1">
-          {TABS.map((tab) => {
-            const isActive = tab.key === activeTab;
-            return (
-              <button
-                key={tab.key}
-                type="button"
-                onClick={() => setActiveTab(tab.key)}
-                className={[
+          {TABS.map((tab) => (
+            <NavLink
+              key={tab.key}
+              to={tab.path}
+              end={tab.path === '/'}
+              className={({ isActive }) =>
+                [
                   'whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium transition',
                   isActive
                     ? 'bg-emerald-500 text-slate-950 shadow-sm shadow-emerald-500/30'
                     : 'bg-transparent text-slate-300 hover:bg-slate-800/70'
-                ].join(' ')}
-              >
-                {tab.label}
-              </button>
-            );
-          })}
+                ].join(' ')
+              }
+            >
+              {tab.label}
+            </NavLink>
+          ))}
         </div>
       </nav>
 
       {/* Content */}
       <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-4 px-4 py-4">
-        {activeTab === 'home' && <HomePage />}
-        {activeTab === 'species' && <SpeciesPage species={combinedSpecies} />}
-        {activeTab === 'care' && <CarePage />}
-        {activeTab === 'breeding' && <BreedingPage />}
-        {activeTab === 'rehab' && <RehabPage />}
-        {activeTab === 'tools' && (
-          <ToolsPage
-            onCreateSpecies={addSpecies}
-            onClearLocal={clearSpecies}
-            localCount={localSpecies.length}
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route
+            path="/species"
+            element={<SpeciesPage species={combinedSpecies} />}
           />
-        )}
-        {activeTab === 'about' && <AboutPage />}
+          <Route path="/care" element={<CarePage />} />
+          <Route path="/breeding" element={<BreedingPage />} />
+          <Route path="/rehab" element={<RehabPage />} />
+          <Route
+            path="/tools"
+            element={
+              <ToolsPage
+                onCreateSpecies={addSpecies}
+                onClearLocal={clearSpecies}
+                localCount={localSpecies.length}
+              />
+            }
+          />
+          <Route path="/about" element={<AboutPage />} />
+
+          {/* Fallback – allt annat skickas hem */}
+          <Route path="*" element={<HomePage />} />
+        </Routes>
       </main>
 
       {/* Footer */}
