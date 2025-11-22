@@ -1,18 +1,18 @@
 import React from 'react';
 import type { SpeciesProfile } from '../types/species';
 
-interface Props {
+interface SpeciesListProps {
   species: SpeciesProfile[];
 }
 
-const SpeciesList: React.FC<Props> = ({ species }) => {
+const SpeciesList: React.FC<SpeciesListProps> = ({ species }) => {
   if (!species || species.length === 0) {
     return <p>Inga artprofiler inlagda ännu.</p>;
   }
 
   return (
     <ul className="space-y-2">
-      {species.map((sp: SpeciesProfile) => (
+      {species.map((sp) => (
         <li
           key={sp.id}
           className="flex flex-col gap-1 rounded-lg border border-slate-800 bg-slate-900/70 p-3 text-sm"
@@ -26,7 +26,7 @@ const SpeciesList: React.FC<Props> = ({ species }) => {
                 </span>
               </p>
               <p className="text-xs text-slate-400">
-                Grupp: {sp.group} • Svårighet: {sp.careLevel}
+                Grupp: {sp.group} • Svårighetsgrad: {sp.careLevel}
               </p>
             </div>
             <div className="flex flex-wrap gap-1 text-[0.65rem]">
@@ -40,6 +40,9 @@ const SpeciesList: React.FC<Props> = ({ species }) => {
                   Potentiellt farlig
                 </span>
               )}
+              <span className="rounded-full bg-emerald-500/20 px-2 py-0.5">
+                {sp.activity}
+              </span>
             </div>
           </div>
 
@@ -49,7 +52,10 @@ const SpeciesList: React.FC<Props> = ({ species }) => {
 
           <div className="flex flex-wrap gap-1 text-[0.65rem] text-slate-300">
             {sp.tags.map((tag) => (
-              <span key={tag} className="rounded-full bg-slate-800 px-2 py-0.5">
+              <span
+                key={tag}
+                className="rounded-full bg-slate-800 px-2 py-0.5"
+              >
                 {tag}
               </span>
             ))}
