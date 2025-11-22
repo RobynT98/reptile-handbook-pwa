@@ -1,0 +1,54 @@
+{
+  "id": "python_regius",
+  "commonName": "Kungspyton",
+  "scientificName": "Python regius",
+  "group": "snake",
+  "origin": ["Västafrika"],
+  "careLevel": "intermediate",
+  "venomous": false,
+  "potentiallyDangerous": true,
+  "activity": "nocturnal",
+  "sizeCm": { "min": 80, "max": 150 },
+  "lifespanYears": { "min": 20, "max": 30 },
+  "temperament": "docile",
+  "husbandry": {
+    "enclosure": "Minst 120×60×60 cm för vuxen individ, gärna större.",
+    "temperature": "Hotspot 31–33°C, sval sida 24–26°C, natt 22–24°C.",
+    "humidity": "50–60 %, upp till 70 % vid öms.",
+    "lighting": "Lågintensivt ljus, svagt nattljus; UVB valfritt men kan vara positivt.",
+    "substrate": "Kokoshumus, bark eller annan fuktbevarande men hygienisk botten.",
+    "enrichments": [
+      "Gömställe på varm sida",
+      "Gömställe på sval sida",
+      "Grenar / rötter att slingra sig runt",
+      "Flera texturer i miljön"
+    ]
+  },
+  "diet": {
+    "preyType": "Gnagare (mus / råtta i rätt storlek)",
+    "scheduleJuvenile": "Var 5–7:e dag.",
+    "scheduleAdult": "Var 10–14:e dag.",
+    "notes": "Arten kan fasta periodvis; följ vikt och hull noggrant istället för att tvångsmata."
+  },
+  "breeding": {
+    "difficulty": "intermediate",
+    "season": "Ofta vinter/vår med lätt temperaturdrop före parning.",
+    "clutchSize": "Vanligen 3–11 ägg per kull.",
+    "incubation": "30–32°C i cirka 55–60 dagar i stabil, lätt fuktig miljö.",
+    "notes": "Stör honan så lite som möjligt under ruvning; överväg artificiell inkubation om du vill kunna övervaka äggen noggrant."
+  },
+  "rehab": {
+    "commonIssues": [
+      "Mites / parasiter i huden",
+      "Fel luftfuktighet → dålig ömsning",
+      "Anorexi vid stress eller fel miljö",
+      "Andningsproblem vid dålig ventilation"
+    ],
+    "redFlags": "Väsande andning, bubblor från näsborrar, markerad viktnedgång, upprepade kräkningar, neurologiska symtom.",
+    "quarantineProtocol": "Minst 60 dagar i separat terrarium/rum, egen utrustning, daglig observation, vägning varje vecka, behandling vid parasiter.",
+    "stressSigns": "Spänd kropp, upprepade huggförsök, konstant gömmande, vägran att äta under annars goda förhållanden."
+  },
+  "tags": ["orm", "pyton", "avel-populär", "intermediate"],
+  "createdAt": "2025-11-22T00:00:00.000Z",
+  "updatedAt": "2025-11-22T00:00:00.000Z"
+}
