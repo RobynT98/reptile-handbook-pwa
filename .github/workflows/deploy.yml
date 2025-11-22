@@ -3,8 +3,8 @@ name: Deploy Reptile Handbook PWA
 on:
   push:
     branches:
-      - main        # ändra om du deployar från annan branch
-  workflow_dispatch:
+      - main            # ändra om du använder annan branch
+  workflow_dispatch:    # så du kan köra den manuellt från Actions
 
 permissions:
   contents: read
@@ -27,17 +27,22 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          # OBS: ingen "cache: npm" här längre
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
 
       - name: Build
         run: npm run build
 
-      - name: Upload build artifacts
+      - name: Upload build artifact
         uses: actions/upload-pages-artifact@v3
         with:
+          # Vite bygger till "dist" – det är den som ska upp till Pages
           path: dist
 
   deploy:
