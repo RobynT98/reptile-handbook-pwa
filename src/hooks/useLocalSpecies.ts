@@ -1,43 +1,21 @@
-import { useEffect, useState } from 'react';
-import type { SpeciesProfile } from '../types/species';
-
-const STORAGE_KEY = 'reptileHandbook.localSpecies';
+import { useState, useEffect } from "react";
+import { Species } from "../types/species";
 
 export function useLocalSpecies() {
-  const [localSpecies, setLocalSpecies] = useState<SpeciesProfile[]>([]);
+  const [species, setSpecies] = useState<Species[]>([]);
 
-  // Läs in lokalt sparade arter vid start
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    try {
-      const raw = window.localStorage.getItem(STORAGE_KEY);
-      if (!raw) return;
-      const parsed = JSON.parse(raw) as SpeciesProfile[];
-      if (Array.isArray(parsed)) {
-        setLocalSpecies(parsed);
-      }
-    } catch (error) {
-      console.error('Kunde inte läsa lokala artprofiler:', error);
+    const stored = localStorage.getItem("species-data");
+    if (stored) {
+      setSpecies(JSON.parse(stored));
     }
   }, []);
 
-  // Spara automatiskt när listan ändras
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(localSpecies));
-    } catch (error) {
-      console.error('Kunde inte spara lokala artprofiler:', error);
-    }
-  }, [localSpecies]);
-
-  const addSpecies = (sp: SpeciesProfile) => {
-    setLocalSpecies((prev) => [...prev, sp]);
+  const addSpecies = (newSpecies: Species) => {
+    const updated = [...species, newSpecies];
+    setSpecies(updated);
+    localStorage.setItem("species-data", JSON.stringify(updated));
   };
 
-  const clearSpecies = () => {
-    setLocalSpecies([]);
-  };
-
-  return { localSpecies, addSpecies, clearSpecies };
+  return { species, addSpecies };
 }
