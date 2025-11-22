@@ -1,0 +1,9 @@
+{
+  "name": "Reptile Handbook PWA",
+  "short_name": "ReptilePWA",
+  "start_url": "/reptile-handbook-pwa/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#003300",
+  "icons": []
+}
