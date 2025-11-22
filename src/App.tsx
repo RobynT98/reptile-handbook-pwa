@@ -21,11 +21,7 @@ type TabKey =
   | 'tools'
   | 'about';
 
-const TABS: {
-  key: TabKey;
-  label: string;
-  path: string;
-}[] = [
+const TABS: { key: TabKey; label: string; path: string }[] = [
   { key: 'home', label: 'Hem', path: '/' },
   { key: 'species', label: 'Artprofiler', path: '/species' },
   { key: 'care', label: 'Vård & Miljö', path: '/care' },
