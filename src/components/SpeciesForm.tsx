@@ -147,6 +147,7 @@ const SpeciesForm: React.FC<SpeciesFormProps> = ({ onCreate }) => {
     onCreate(profile);
     setMessage(`Artprofil "${profile.commonName}" sparad lokalt.`);
 
+    // Rensa bara vissa fält
     setId('');
     setCommonName('');
     setScientificName('');
@@ -160,20 +161,445 @@ const SpeciesForm: React.FC<SpeciesFormProps> = ({ onCreate }) => {
         </div>
       )}
 
-      {/* resten av formuläret – exakt som i din App.tsx tidigare */}
-      {/* Jag låter allt vara kvar oförändrat från där vi slutade */}
-      {/* --- Fältblocken --- */}
-
+      {/* Grunddata */}
       <div className="grid gap-3 md:grid-cols-2">
-        {/* ... hela blocket med group/careLevel/venomous osv ... */}
+        <div className="space-y-1">
+          <label className="block text-xs font-medium text-slate-300">
+            Id (unik nyckel, t.ex. <code>python_regius</code>)
+          </label>
+          <input
+            className="w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+            value={id}
+            onChange={(e) => setId(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="space-y-1">
+          <label className="block text-xs font-medium text-slate-300">
+            Svenskt namn
+          </label>
+          <input
+            className="w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+            value={commonName}
+            onChange={(e) => setCommonName(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="space-y-1">
+          <label className="block text-xs font-medium text-slate-300">
+            Latinskt namn
+          </label>
+          <input
+            className="w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+            value={scientificName}
+            onChange={(e) => setScientificName(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="space-y-1">
+          <label className="block text-xs font-medium text-slate-300">
+            Grupp
+          </label>
+          <select
+            className="w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+            value={group}
+            onChange={(e) =>
+              setGroup(e.target.value as SpeciesProfile['group'])
+            }
+          >
+            <option value="snake">Orm</option>
+            <option value="lizard">Ödla</option>
+            <option value="amphibian">Groddjur</option>
+            <option value="spider">Spindel</option>
+            <option value="scorpion">Skorpion</option>
+            <option value="other">Annat</option>
+          </select>
+        </div>
+
+        <div className="space-y-1">
+          <label className="block text-xs font-medium text-slate-300">
+            Svårighetsgrad
+          </label>
+          <select
+            className="w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+            value={careLevel}
+            onChange={(e) =>
+              setCareLevel(e.target.value as SpeciesProfile['careLevel'])
+            }
+          >
+            <option value="beginner">Nybörjare</option>
+            <option value="intermediate">Medel</option>
+            <option value="advanced">Avancerad</option>
+          </select>
+        </div>
+
+        <div className="space-y-1">
+          <label className="block text-xs font-medium text-slate-300">
+            Aktivitet
+          </label>
+          <select
+            className="w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+            value={activity}
+            onChange={(e) =>
+              setActivity(e.target.value as SpeciesProfile['activity'])
+            }
+          >
+            <option value="diurnal">Dagaktiv</option>
+            <option value="nocturnal">Nattaktiv</option>
+            <option value="crepuscular">Skymningsaktiv</option>
+            <option value="variable">Varierande</option>
+          </select>
+        </div>
+
+        <div className="space-y-1">
+          <label className="block text-xs font-medium text-slate-300">
+            Giftig?
+          </label>
+          <select
+            className="w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+            value={venomous ? 'yes' : 'no'}
+            onChange={(e) => setVenomous(e.target.value === 'yes')}
+          >
+            <option value="no">Nej</option>
+            <option value="yes">Ja</option>
+          </select>
+        </div>
+
+        <div className="space-y-1">
+          <label className="block text-xs font-medium text-slate-300">
+            Potentiellt farlig (storlek, temperament etc)?
+          </label>
+          <select
+            className="w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+            value={potentiallyDangerous ? 'yes' : 'no'}
+            onChange={(e) => setPotentiallyDangerous(e.target.value === 'yes')}
+          >
+            <option value="no">Nej</option>
+            <option value="yes">Ja</option>
+          </select>
+        </div>
       </div>
 
-      {/* osv – men för att slippa scroll-helvete här: 
-         du kan använda exakt samma fältblock som i din nuvarande
-         SpeciesForm-del i App.tsx, bara copy-pasta in dem här. */}
+      {/* Storlek, livslängd, ursprung, temperament */}
+      <div className="grid gap-3 md:grid-cols-2">
+        <div className="space-y-1">
+          <label className="block text-xs font-medium text-slate-300">
+            Ursprung (komma-separerat)
+          </label>
+          <input
+            className="w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+            placeholder="t.ex. Västafrika, Ghana, Togo"
+            value={origin}
+            onChange={(e) => setOrigin(e.target.value)}
+          />
+        </div>
 
-      {/* Jag kan också skicka HELA filen i nästa meddelande om du vill
-          ha den 100% färdig utan att mixtra själv. */}
+        <div className="space-y-1">
+          <label className="block text-xs font-medium text-slate-300">
+            Temperament
+          </label>
+          <select
+            className="w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+            value={temperament}
+            onChange={(e) =>
+              setTemperament(
+                e.target.value as SpeciesProfile['temperament']
+              )
+            }
+          >
+            <option value="docile">Lugn</option>
+            <option value="nervous">Nervös</option>
+            <option value="defensive">Defensiv</option>
+            <option value="aggressive">Aggressiv</option>
+          </select>
+        </div>
+
+        <div className="space-y-1">
+          <label className="block text-xs font-medium text-slate-300">
+            Storlek min (cm)
+          </label>
+          <input
+            type="number"
+            className="w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+            value={sizeMin}
+            onChange={(e) => setSizeMin(e.target.value)}
+          />
+        </div>
+
+        <div className="space-y-1">
+          <label className="block text-xs font-medium text-slate-300">
+            Storlek max (cm)
+          </label>
+          <input
+            type="number"
+            className="w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+            value={sizeMax}
+            onChange={(e) => setSizeMax(e.target.value)}
+          />
+        </div>
+
+        <div className="space-y-1">
+          <label className="block text-xs font-medium text-slate-300">
+            Livslängd min (år) (valfritt)
+          </label>
+          <input
+            type="number"
+            className="w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+            value={lifeMin}
+            onChange={(e) => setLifeMin(e.target.value)}
+          />
+        </div>
+
+        <div className="space-y-1">
+          <label className="block text-xs font-medium text-slate-300">
+            Livslängd max (år) (valfritt)
+          </label>
+          <input
+            type="number"
+            className="w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+            value={lifeMax}
+            onChange={(e) => setLifeMax(e.target.value)}
+          />
+        </div>
+      </div>
+
+      {/* Husbandry */}
+      <div className="grid gap-3 md:grid-cols-2">
+        <div className="space-y-1">
+          <label className="block text-xs font-medium text-slate-300">
+            Terrarium / inredning (text)
+          </label>
+          <textarea
+            className="h-20 w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+            value={enclosure}
+            onChange={(e) => setEnclosure(e.target.value)}
+          />
+        </div>
+
+        <div className="space-y-1">
+          <label className="block text-xs font-medium text-slate-300">
+            Temperatur (text)
+          </label>
+          <textarea
+            className="h-20 w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+            value={temperature}
+            onChange={(e) => setTemperature(e.target.value)}
+          />
+        </div>
+
+        <div className="space-y-1">
+          <label className="block text-xs font-medium text-slate-300">
+            Luftfuktighet (text)
+          </label>
+          <textarea
+            className="h-20 w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+            value={humidity}
+            onChange={(e) => setHumidity(e.target.value)}
+          />
+        </div>
+
+        <div className="space-y-1">
+          <label className="block text-xs font-medium text-slate-300">
+            Belysning (text)
+          </label>
+          <textarea
+            className="h-20 w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+            value={lighting}
+            onChange={(e) => setLighting(e.target.value)}
+          />
+        </div>
+
+        <div className="space-y-1 md:col-span-2">
+          <label className="block text-xs font-medium text-slate-300">
+            Substrat
+          </label>
+          <input
+            className="w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+            value={substrate}
+            onChange={(e) => setSubstrate(e.target.value)}
+          />
+        </div>
+
+        <div className="space-y-1 md:col-span-2">
+          <label className="block text-xs font-medium text-slate-300">
+            Berikning (komma-separerat, t.ex. gömställen, grenar, stenar)
+          </label>
+          <input
+            className="w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+            value={enrichments}
+            onChange={(e) => setEnrichments(e.target.value)}
+          />
+        </div>
+      </div>
+
+      {/* Diet */}
+      <div className="grid gap-3 md:grid-cols-2">
+        <div className="space-y-1">
+          <label className="block text-xs font-medium text-slate-300">
+            Föda (typ)
+          </label>
+          <input
+            className="w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+            value={preyType}
+            onChange={(e) => setPreyType(e.target.value)}
+          />
+        </div>
+
+        <div className="space-y-1">
+          <label className="block text-xs font-medium text-slate-300">
+            Utfodring juveniler
+          </label>
+          <input
+            className="w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+            value={scheduleJuvenile}
+            onChange={(e) => setScheduleJuvenile(e.target.value)}
+          />
+        </div>
+
+        <div className="space-y-1">
+          <label className="block text-xs font-medium text-slate-300">
+            Utfodring vuxen
+          </label>
+          <input
+            className="w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+            value={scheduleAdult}
+            onChange={(e) => setScheduleAdult(e.target.value)}
+          />
+        </div>
+
+        <div className="space-y-1">
+          <label className="block text-xs font-medium text-slate-300">
+            Fodernoter (valfritt)
+          </label>
+          <textarea
+            className="h-20 w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+            value={dietNotes}
+            onChange={(e) => setDietNotes(e.target.value)}
+          />
+        </div>
+      </div>
+
+      {/* Breeding */}
+      <details className="rounded border border-slate-800 bg-slate-900/60 p-3 text-xs">
+        <summary className="cursor-pointer font-semibold">
+          Avel (valfritt)
+        </summary>
+        <div className="mt-2 grid gap-3 md:grid-cols-2">
+          <div className="space-y-1">
+            <label className="block text-xs font-medium text-slate-300">
+              Säsong / period
+            </label>
+            <input
+              className="w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+              value={breedingSeason}
+              onChange={(e) => setBreedingSeason(e.target.value)}
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="block text-xs font-medium text-slate-300">
+              Kullstorlek
+            </label>
+            <input
+              className="w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+              value={breedingClutchSize}
+              onChange={(e) => setBreedingClutchSize(e.target.value)}
+            />
+          </div>
+          <div className="space-y-1 md:col-span-2">
+            <label className="block text-xs font-medium text-slate-300">
+              Inkubation (temperatur, dagar, fuktighet)
+            </label>
+            <textarea
+              className="h-20 w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+              value={breedingIncubation}
+              onChange={(e) => setBreedingIncubation(e.target.value)}
+            />
+          </div>
+          <div className="space-y-1 md:col-span-2">
+            <label className="block text-xs font-medium text-slate-300">
+              Övriga avelsnoter
+            </label>
+            <textarea
+              className="h-20 w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+              value={breedingNotes}
+              onChange={(e) => setBreedingNotes(e.target.value)}
+            />
+          </div>
+        </div>
+      </details>
+
+      {/* Rehab */}
+      <details className="rounded border border-slate-800 bg-slate-900/60 p-3 text-xs">
+        <summary className="cursor-pointer font-semibold">
+          Rehab &amp; rescue (valfritt)
+        </summary>
+        <div className="mt-2 grid gap-3 md:grid-cols-2">
+          <div className="space-y-1 md:col-span-2">
+            <label className="block text-xs font-medium text-slate-300">
+              Vanliga problem (komma-separerat)
+            </label>
+            <input
+              className="w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+              value={rehabIssues}
+              onChange={(e) => setRehabIssues(e.target.value)}
+            />
+          </div>
+          <div className="space-y-1 md:col-span-2">
+            <label className="block text-xs font-medium text-slate-300">
+              Röda flaggor (text)
+            </label>
+            <textarea
+              className="h-20 w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+              value={rehabRedFlags}
+              onChange={(e) => setRehabRedFlags(e.target.value)}
+            />
+          </div>
+          <div className="space-y-1 md:col-span-2">
+            <label className="block text-xs font-medium text-slate-300">
+              Karantänprotokoll (text)
+            </label>
+            <textarea
+              className="h-20 w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+              value={rehabQuarantine}
+              onChange={(e) => setRehabQuarantine(e.target.value)}
+            />
+          </div>
+          <div className="space-y-1 md:col-span-2">
+            <label className="block text-xs font-medium text-slate-300">
+              Stress-signaler (text)
+            </label>
+            <textarea
+              className="h-20 w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+              value={rehabStressSigns}
+              onChange={(e) => setRehabStressSigns(e.target.value)}
+            />
+          </div>
+        </div>
+      </details>
+
+      {/* Taggar */}
+      <div className="space-y-1">
+        <label className="block text-xs font-medium text-slate-300">
+          Taggar (komma-separerat, t.ex. orm, nybörjarart, torrmiljö)
+        </label>
+        <input
+          className="w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+          value={tags}
+          onChange={(e) => setTags(e.target.value)}
+        />
+      </div>
+
+      <div className="pt-2">
+        <button
+          type="submit"
+          className="inline-flex items-center rounded bg-emerald-500 px-3 py-1.5 text-xs font-semibold text-slate-950 shadow-sm shadow-emerald-500/40 hover:bg-emerald-400"
+        >
+          Spara artprofil lokalt
+        </button>
+      </div>
     </form>
   );
 };
