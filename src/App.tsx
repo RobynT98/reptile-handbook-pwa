@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { speciesList } from './data/species';
+import type { SpeciesProfile } from './types/species';
 
 type TabKey =
   | 'home'
@@ -89,7 +91,7 @@ const Card: React.FC<{ title: string; children: React.ReactNode }> = ({
   </section>
 );
 
-/* --- Sidor (placeholder, fylls på sen) --- */
+/* --- Sidor --- */
 
 const HomePage: React.FC = () => (
   <div className="space-y-4">
@@ -115,19 +117,82 @@ const HomePage: React.FC = () => (
   </div>
 );
 
-const SpeciesPage: React.FC = () => (
-  <Card title="Artprofiler">
-    <p>
-      Här kommer vi att lista alla arter med filtrering (orm, spindel,
-      skorpion osv.), svårighetsgrad och taggar.
-    </p>
-    <p>
-      Nästa steg blir att definiera en <strong>datamodell</strong> för
-      artprofiler (TypeScript-typer) och lägga in de första arterna – t.ex.
-      Kungspyton och Childrenspyton.
-    </p>
-  </Card>
-);
+const SpeciesPage: React.FC = () => {
+  const hasSpecies = speciesList.length > 0;
+
+  return (
+    <div className="space-y-4">
+      <Card title="Artprofiler">
+        <p>
+          Här listas arter som finns inlagda i handboken. Senare kan vi lägga
+          till filtrering (orm/spindel/skorpion, svårighetsgrad, gift osv.).
+        </p>
+        <p className="text-xs text-slate-400">
+          Just nu ligger bara Kungspyton inne som demo-data.
+        </p>
+      </Card>
+
+      <Card title="Alla artprofiler (demo)">
+        {!hasSpecies && <p>Inga artprofiler inlagda ännu.</p>}
+
+        {hasSpecies && (
+          <ul className="space-y-2">
+            {speciesList.map((sp: SpeciesProfile) => (
+              <li
+                key={sp.id}
+                className="flex flex-col gap-1 rounded-lg border border-slate-800 bg-slate-900/70 p-3 text-sm"
+              >
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div>
+                    <p className="font-semibold">
+                      {sp.commonName}{' '}
+                      <span className="text-xs italic text-slate-400">
+                        ({sp.scientificName})
+                      </span>
+                    </p>
+                    <p className="text-xs capitalize text-slate-400">
+                      Grupp: {sp.group} • Svårighetsgrad: {sp.careLevel}
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-1 text-[0.65rem]">
+                    {sp.venomous && (
+                      <span className="rounded-full bg-red-600/80 px-2 py-0.5 text-[0.65rem]">
+                        Giftig
+                      </span>
+                    )}
+                    {sp.potentiallyDangerous && !sp.venomous && (
+                      <span className="rounded-full bg-amber-500/80 px-2 py-0.5 text-[0.65rem]">
+                        Potentiellt farlig
+                      </span>
+                    )}
+                    <span className="rounded-full bg-emerald-500/20 px-2 py-0.5">
+                      {sp.activity}
+                    </span>
+                  </div>
+                </div>
+
+                <p className="text-xs text-slate-300">
+                  Ursprung: {sp.origin.join(', ')}
+                </p>
+
+                <div className="flex flex-wrap gap-1 text-[0.65rem] text-slate-300">
+                  {sp.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-full bg-slate-800 px-2 py-0.5"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </Card>
+    </div>
+  );
+};
 
 const CarePage: React.FC = () => (
   <Card title="Vård & Miljö">
