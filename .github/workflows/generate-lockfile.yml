@@ -19,10 +19,5 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Commit lockfile back to repo
-        run: |
-          git config --local user.name "github-actions"
-          git config --local user.email "actions@github.com"
-          git add package-lock.json
-          git commit -m "Add package-lock.json" || echo "No changes"
-          git push
+      - name: Show that lockfile got created
+  run: ls -a
