@@ -1,0 +1,28 @@
+name: Generate package-lock.json
+
+on:
+  push:
+    branches:
+      - main  # eller vilken branch du deployar från
+
+jobs:
+  install-deps:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Commit lockfile back to repo
+        run: |
+          git config --local user.name "github-actions"
+          git config --local user.email "actions@github.com"
+          git add package-lock.json
+          git commit -m "Add package-lock.json" || echo "No changes"
+          git push
